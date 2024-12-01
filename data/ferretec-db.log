@@ -1,0 +1,28 @@
+/*C1*/SET SCHEMA SYSTEM_LOBS
+INSERT INTO BLOCKS VALUES(0,2147483647,0)
+COMMIT
+/*C2*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C3*/SET SCHEMA PUBLIC
+create table Caja (id integer not null, balanceDiario double not null, primary key (id))
+create table Cliente (id integer not null, contacto varchar(50), nombre varchar(50), tipo varchar(30), primary key (id))
+create table IMAGES (ID varchar(32) not null, GALLERY varchar(32), image varbinary(16777216), primary key (ID))
+create table Inventario (id integer not null, nivelMinimo integer not null, primary key (id))
+create table OXDISCUSSIONCOMMENTS (id varchar(32) not null, comment clob(16777216), discussionId varchar(32), time timestamp, userName varchar(30), primary key (id))
+create table Pedido (id integer not null, fecha timestamp, cliente_id integer, primary key (id))
+create table pedido_producto (pedido_id integer not null, producto_id integer not null)
+create table Producto (id integer not null, cantidadDisponible integer not null, codigoBarras varchar(13), descripcion varchar(255), margenGanancia double not null, nombre varchar(50), precioBase double not null, proveedor varchar(50), tipoVenta varchar(255), inventario_id integer, primary key (id))
+create table Reporte (id integer not null, fechaFin timestamp, fechaInicio timestamp, tipo varchar(30), primary key (id))
+create table TuPrimeraEntidad (id varchar(32) not null, descripcion varchar(50), fecha date, importe numeric(19,2), primary key (id))
+create table Usuario (id integer not null, nombre varchar(50), rol varchar(30), primary key (id))
+create table Venta (id integer not null, fecha timestamp, montoTotal double not null, cliente_id integer, primary key (id))
+create table venta_producto (venta_id integer not null, producto_id integer not null)
+create index IDXbhlx4vunn24ym1tbrlgq8g30m on OXDISCUSSIONCOMMENTS (discussionId)
+create sequence hibernate_sequence start with 1 increment by 1
+alter table Pedido add constraint FK1jq79bpskcvo2krkbee2qdqpr foreign key (cliente_id) references Cliente
+alter table pedido_producto add constraint FK1r2or0ge3hwhjv1bglsa0qkyk foreign key (producto_id) references Producto
+alter table pedido_producto add constraint FKii02jbnopgnn6045b2spqmf97 foreign key (pedido_id) references Pedido
+alter table Producto add constraint FK6yrr4ulx2ipfwvhas5jj9aa4a foreign key (inventario_id) references Inventario
+alter table Venta add constraint FKbv0rwi1bkq5qsqv2qyy52124i foreign key (cliente_id) references Cliente
+alter table venta_producto add constraint FKbxpacloxt9hptq7dogpt6nxjs foreign key (producto_id) references Producto
+alter table venta_producto add constraint FKetiydr6lnqnwyvl0bbpk57awt foreign key (venta_id) references Venta
